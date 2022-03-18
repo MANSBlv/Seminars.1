@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<p>test test123</p>
+
+<hr><hr/>
+
+<body>
+	<h1>Product info<h1/>
+		<p>ID</p>
+	<p th:text="${object.getId()}" />
+		<p>TITLE</p>
+	<p th:text="${object.getTitle()}" />
+		<p>DESCRIPTION</p>
+	<p th:text="${object.getDescription()}" />
+		<p>QUANTITY</p>
+	<p th:text="${object.getQuantity()}"/>
+		<p>PRICE</p>
+	<p th:text="${object.getPrice()}" />
+
+
+
+
+</body>
+
+
+</html>

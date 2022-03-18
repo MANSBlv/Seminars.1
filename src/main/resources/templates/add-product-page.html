@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<h1>ievadiet produkta parametrus</h1>
+<form action="#"th:action="@{/addProduct}" th:object="${product}" method="post">
+	<label>Ievadiet Nosaukumu</label>
+	<input type="text" th:field="*{title}">
+	<label>Ievadiet Apraksts</label>
+	<input type="text" th:field="*{description}">
+	<label>Ievadiet Cena</label>
+	<input type="text" th:field="*{price}">
+	<label>Daudzums</label>
+	<input type="text" th:field="*{quantity}">
+
+	<input type="submit" value="saglabat">
+
+
+
+</form>
+
+
+
+</html>
