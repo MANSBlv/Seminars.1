@@ -47,7 +47,7 @@ public class Product {
             this.price = 10.0f;
         }
     }
-
+    // Es nez.....,.,.,
     public Product() {
        
     }
