@@ -98,6 +98,7 @@ public class MyFirstController {
 		}
 		return "redirect:/error-page";
 	}
+	// delete funkc
 	@GetMapping("/delete/{id}")
 	public String deleteProduct(@PathVariable(name="id") int id,Model model) {
 		for(Product temp: allproducts) {
