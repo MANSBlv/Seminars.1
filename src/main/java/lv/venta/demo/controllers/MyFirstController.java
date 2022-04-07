@@ -3,6 +3,7 @@ package lv.venta.demo.controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,12 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lv.venta.demo.models.Product;
+import lv.venta.demo.services.CRUDProduct;
 
 @Controller
 public class MyFirstController {
-
-	private ArrayList<Product> allproducts= new ArrayList<>(Arrays.asList(new Product("abols","garsigs",10,0.99f),
-			new Product("bumbieris","zals", 2, 0.12f)));
+	@Autowired
+	private CRUDProduct productCRUDService;
 	//url - localhost:8080/home
 	@GetMapping("/home")
 	public String getHomePage()
@@ -42,75 +43,87 @@ public class MyFirstController {
 	}
 	@GetMapping("/prod")
 	public String getOtherObject(Model model) {
-		model.addAttribute("prod", allproducts);
-		return "two-product-page";
+		try {
+			model.addAttribute("prod", productCRUDService.readAllProducts());
+			return "two-product-page";
+		}
+		catch (Exception e){
+			return "error-page";
+		}
 	}
 	@GetMapping("/prodFilter")
 	public String getAllProductsFilter(@RequestParam(name="id") int id,  Model model) {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				model.addAttribute("object", temp);
+		try {
+				model.addAttribute("object", productCRUDService.readProductById(id));
 				return "one-product-page";
-			}
 		}
+		 catch (Exception e){
 		return "error-page";
+		}
 	}
 	@GetMapping("/prod/{id}")
 	public String getAllProductsById(@PathVariable(name="id") int id, Model model) {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				model.addAttribute("object", temp);
-				return "one-product-page";
-			}
-		}
-		return "error-page";
+		try {
+			model.addAttribute("object", productCRUDService.readProductById(id));
+			return "one-product-page";
 	}
+	 catch (Exception e){
+	return "error-page";
+	}
+	}
+	
+	
 	@GetMapping("/addProduct")
 	public String getAddProduct(Product product) {
 		return "add-product-page";
 	}
+	
+	
 	@PostMapping("/addProduct")
 	public String postAddProduct(Product product) {
-		Product newProd= new Product(product.getTitle(), product.getDescription(),product.getQuantity(),product.getPrice());
-		allproducts.add(newProd);
-		return"redirect:/prod";
+		if(productCRUDService.createNewProduct(product))
+			return"redirect:/prod";
+		else
+			return"redirect:/error";
 	}
+	
+	
 	@GetMapping("/updateProduct/{id}")// localhost:8080/updateProduct/2
 		public String getUpdateProduct(@PathVariable(name="id") int id, Model model) {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				model.addAttribute("product", temp);
-				return "update-product-page";
-			}
+		try {
+			model.addAttribute("product", productCRUDService.readProductById(id));
+			return "update-product-page";
 		}
-		return "error-page";
+		catch (Exception e){
+			return "error-page";
+		}
+				
+	
+		
 	}
+	
 	@PostMapping("/updateProduct/{id}")
 	public String postUpdateProduct(@PathVariable(name="id")int id, Product product) {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				temp.setTitle(product.getTitle());
-				temp.setDescription(product.getDescription());
-				temp.setPrice(product.getPrice());
-				temp.setQuantity(product.getQuantity());
+		if(productCRUDService.updateProductById(id, product))
 				return "redirect:/prod/"+id;
-			}
-		}
-		return "redirect:/error-page";
+		else
+		
+				return "redirect:/error-page";
 	}
 	// delete funkc
 	@GetMapping("/delete/{id}")
 	public String deleteProduct(@PathVariable(name="id") int id,Model model) {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				allproducts.remove(temp);
-				model.addAttribute("prod", allproducts);
+		if(productCRUDService.deleteByProductId(id)) {
+				model.addAttribute("prod", productCRUDService.readAllProducts());
 				return"two-product-page";
 			}
-		}
-		return"error-page";
+		else return"error-page";
+	}
+	
+
+		
 	}
 	
 	
-}
+
 

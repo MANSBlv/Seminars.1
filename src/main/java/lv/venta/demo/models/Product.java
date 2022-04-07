@@ -31,23 +31,17 @@ public class Product {
         return quantity;
     }
     public void setQuantity(int quantity) {
-        if (quantity > 0 && quantity < 100000) {
+      
             this.quantity = quantity;
-        } else {
-            this.quantity = 1;
-        }
+     
     }
     public float getPrice() {
         return price;
     }
     public void setPrice(float price) {
-        if (price > 0) {
             this.price = price;
-        } else {
-            this.price = 10.0f;
-        }
+      
     }
-
     public Product() {
        
     }
