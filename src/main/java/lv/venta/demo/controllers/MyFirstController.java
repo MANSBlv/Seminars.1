@@ -3,9 +3,12 @@ package lv.venta.demo.controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +61,7 @@ public class MyFirstController {
 				return "one-product-page";
 		}
 		 catch (Exception e){
-		return "error-page";
+			 return "error-page";
 		}
 	}
 	@GetMapping("/prod/{id}")
@@ -80,12 +83,17 @@ public class MyFirstController {
 	
 	
 	@PostMapping("/addProduct")
-	public String postAddProduct(Product product) {
+	public String postAddProduct(@Valid Product product, BindingResult result) {
+		if(!result.hasErrors()) {
 		if(productCRUDService.createNewProduct(product))
 			return"redirect:/prod";
 		else
 			return"redirect:/error";
+	}else {
+		return"add-product-page";
 	}
+	}
+
 	
 	
 	@GetMapping("/updateProduct/{id}")// localhost:8080/updateProduct/2
