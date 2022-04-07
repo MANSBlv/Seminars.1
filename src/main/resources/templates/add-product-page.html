@@ -1,15 +1,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <h1>ievadiet produkta parametrus</h1>
 <form action="#"th:action="@{/addProduct}" th:object="${product}" method="post">
-	<label>Ievadiet Nosaukumu</label>
-	<input type="text" th:field="*{title}">
-	<label>Ievadiet Apraksts</label>
-	<input type="text" th:field="*{description}">
-	<label>Ievadiet Cena</label>
-	<input type="text" th:field="*{price}">
-	<label>Daudzums</label>
-	<input type="text" th:field="*{quantity}">
-
+<table>
+	<tr>
+		<td><label>Ievadiet Nosaukumu</label></td>
+		<td><input type="text" th:field="*{title}"></td>
+		<td th:if="${#fields.hasErrors('title')}" th:errors="*{title}" />
+	</tr>
+	<tr>
+		<td><label>Ievadiet Apraksts</label></td>
+		<td><input type="text" th:field="*{description}"></td>
+		<td th:if="${#fields.hasErrors('description')}" th:errors="*{description}" />
+	</tr>
+	<tr>
+		<td><label>Ievadiet Cena</label></td>
+		<td><input type="text" th:field="*{price}"></td>
+		<td th:if="${#fields.hasErrors('price')}" th:errors="*{price}" />
+	</tr>
+	<tr>
+		<td><label>Daudzums</label></td>
+		<td><input type="text" th:field="*{quantity}"></td>
+		<td th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" />
+	</tr>
+</table>
 	<input type="submit" value="saglabat">
 
 
