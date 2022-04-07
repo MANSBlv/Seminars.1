@@ -3,77 +3,68 @@ package lv.venta.demo.services.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lv.venta.demo.models.Product;
+import lv.venta.demo.repos.iProductRepo;
 import lv.venta.demo.services.CRUDProduct;
 
 @Service
 public class CRUDProductImpl implements CRUDProduct {
-
-	private ArrayList<Product> allproducts= new ArrayList<>(Arrays.asList(new Product("abols","garsigs",10,0.99f),
-			new Product("bumbieris","zals", 2, 0.12f)));
+	@Autowired
+	private iProductRepo productRepo;
 	
 	@Override
 	public boolean createNewProduct(Product product) {
-		boolean isFound= false;
-		for(Product pr: allproducts) {
-			if(pr.getTitle().equals(product.getTitle()) && pr.getDescription().equals(product.getDescription())){
-				isFound=true;
-				break;
-			}
-		}
-		if(!isFound) {
-			
-		
-		Product newProd= new Product(product.getTitle(), product.getDescription(),product.getQuantity(),product.getPrice());
-		allproducts.add(newProd);
-		return true;
-		}
-		else {
-		return false;
+		if(productRepo.existsByTitleAndDescription(product.getTitle(), product.getDescription())) {
+			return false;
+		}else {
+			productRepo.save(product);
+			return true;
 		}
 	}
 
 	@Override
 	public ArrayList<Product> readAllProducts() {
-		return allproducts;
+		return (ArrayList<Product>) productRepo.findAll();
 	}
 
 	@Override
 	public Product readProductById(int id) throws Exception {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				return temp;
-			}
-		
+		if(productRepo.existsById(id)) {
+			Product prod= productRepo.findById(id).get();
+			return prod;
 		}
 		throw new Exception("produkts neeksiste");
 	}
 
 	@Override
 	public boolean updateProductById(int id, Product product) {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				temp.setTitle(product.getTitle());
-				temp.setDescription(product.getDescription());
-				temp.setPrice(product.getPrice());
-				temp.setQuantity(product.getQuantity());
+		
+			if(productRepo.existsById(id)) {
+				Product prod= productRepo.findById(id).get();
+				prod.setTitle(product.getTitle());
+				prod.setDescription(product.getDescription());
+				prod.setPrice(product.getPrice());
+				prod.setQuantity(product.getQuantity());
+				productRepo.save(prod);
 				return true;
 				
 			}
-		}
+		
 		return false;
 	}
 
 	@Override
 	public boolean deleteByProductId(int id) {
-		for(Product temp: allproducts) {
-			if(temp.getId()==id) {
-				allproducts.remove(temp);
+		
+			if(productRepo.existsById(id)) {
+				
+				productRepo.deleteById(id);
 				return true;
 			}
-		}
+		
 		return false;
 	}
 	
