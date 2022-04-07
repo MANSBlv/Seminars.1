@@ -1,11 +1,29 @@
 package lv.venta.demo.models;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class Product {
     private int id;
+    
+    @Size(min=4, max=20)
+    @Pattern(regexp = "[A-ZŽĶĻŅČĢŠ]{1}[a-zžšķļņģč]+")
     private String title;
+    
+    @Size(min=5, max=20)
+    @Pattern(regexp = "[A-ZŽĶĻŅČĢŠ]{1}[a-zžšķļņģč\\s]+")
     private String description;
+    
+    @Min(value = 1)
+    @Max(value = 1000)
     private int quantity;
+    
+    @Min(value = 0)
+    @Max(value = 10000)
     private float price;
+    
     private static int counter = 1000;
 
     public int getId() {

@@ -111,12 +111,16 @@ public class MyFirstController {
 	}
 	
 	@PostMapping("/updateProduct/{id}")
-	public String postUpdateProduct(@PathVariable(name="id")int id, Product product) {
+	public String postUpdateProduct(@PathVariable(name="id")int id, @Valid Product product ,BindingResult result) {
+		if(!result.hasErrors()) {
 		if(productCRUDService.updateProductById(id, product))
 				return "redirect:/prod/"+id;
 		else
 		
 				return "redirect:/error-page";
+		}else {
+			return"add-product-page";
+	}
 	}
 	// delete funkc
 	@GetMapping("/delete/{id}")
